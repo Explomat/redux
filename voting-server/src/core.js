@@ -24,17 +24,33 @@ export function next(state){
 					.set('winner', entries.first());
 	}
 	else {
-		return state.merge({
+    const newState = state.merge({
+      round: state.get('round', 0) + 1,
 			vote: Map({pair: entries.take(2)}),
 			entries: entries.skip(2)
 		});
+    console.log(newState);
+    return newState;
 	}
 }
 
-export function vote(voteState, entry) {
-  return voteState.updateIn(
-    ['tally', entry],
-    0,
-    tally => tally + 1
-  );
+function removePreviosVote(voteState, clientId){
+  const previousVote = voteState.getIn(['votes', clientId]);
+  if (previousVote){
+    return voteState.updateIn(['tally', previousVote], t => t - 1)
+                    .removeIn(['votes', clientId]);
+  }
+  return voteState;
+}
+
+export function vote(voteState, entry, clientId) {
+  const newState = removePreviosVote(voteState, clientId);
+  if (newState.get('pair').includes(entry)){
+    return newState.updateIn(
+      ['tally', entry],
+      0,
+      tally => tally + 1
+    ).setIn(['votes', clientId], entry);
+  }
+  return newState;
 }

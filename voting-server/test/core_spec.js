@@ -22,6 +22,7 @@ describe('application logic', () => {
 			});
 			const nextState = next(state);
 			expect(nextState).to.equal(Map({
+				round: 1,
 				vote: Map({
 					pair: List.of('Trainspotting', '28 Days Later')
 				}),
@@ -42,10 +43,11 @@ describe('application logic', () => {
 		    });
 		    const nextState = next(state);
 		    expect(nextState).to.equal(Map({
-		      vote: Map({
-		        pair: List.of('Sunshine', 'Millions')
-		      }),
-		      entries: List.of('127 Hours', 'Trainspotting')
+		    	round: 1,
+				vote: Map({
+					pair: List.of('Sunshine', 'Millions')
+				}),
+				entries: List.of('127 Hours', 'Trainspotting')
 		    }));
 		});
 		 it('в случае ничьей помещает обе записи в конец списка', () => {
@@ -61,6 +63,7 @@ describe('application logic', () => {
 		    });
 		    const nextState = next(state);
 		    expect(nextState).to.equal(Map({
+		      round: 1,
 		      vote: Map({
 		        pair: List.of('Sunshine', 'Millions')
 		      }),
@@ -121,6 +124,24 @@ describe('application logic', () => {
 	            '28 Days Later': 2
 	          })
 	      }));
+	    });
+	    it('если запись не входит текущую пару, то сервер не должен позволять голосовать за неё', () => {
+	    	const state = Map({
+	          pair: List.of('Trainspotting', '28 Days Later'),
+	          tally: Map({
+	            'Trainspotting': 3,
+	            '28 Days Later': 2
+	          })
+	      });
+	      const nextState = vote(state, 'Sunshine');
+
+	      expect(nextState).to.equal(Map({
+	      	pair: List.of('Trainspotting', '28 Days Later'),
+			tally: Map({
+				'Trainspotting': 3,
+				'28 Days Later': 2
+			})
+	      }))
 	    });
 	});
 });

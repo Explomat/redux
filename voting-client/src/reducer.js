@@ -8,27 +8,29 @@ function vote(state, entry) {
 	const currentPair = state.getIn(['vote', 'pair']);
 	if (currentPair && currentPair.includes(entry)){
 		return state.set('hasVoted', entry);
-	} else {
-		return state;
-	}
+	} 
+	return state;
 }
 
-function resetVote(state) {
-  const hasVoted = state.get('hasVoted');
-  const currentPair = state.getIn(['vote', 'pair'], List());
-  if (hasVoted && !currentPair.includes(hasVoted)) {
-    return state.remove('hasVoted');
-  } else {
-    return state;
+function resetVote(state, prevRound) {
+  //const hasVoted = state.get('hasVoted');
+
+  const currentRound = state.get('round');
+  //const currentPair = state.getIn(['vote', 'pair'], List());
+  if (currentRound !== prevRound) {
+	return state.remove('hasVoted');
   }
+  return state;
 }
 
 export default function(state = Map(), action) {
 	switch (action.type) {
 		case 'SET_STATE':
-			return resetVote(setState(state, action.state));
+			return resetVote(setState(state, action.state), state.get('round'));
 		case 'VOTE':
     		return vote(state, action.entry);
+    	case 'SET_CLIENT_ID':
+    		return state.set('clientId', action.clientId)
 	}
 	return state;
 }
