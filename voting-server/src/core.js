@@ -3,7 +3,9 @@ import {List, Map} from 'immutable';
 export const INITIAL_STATE = Map();
 
 export function setEntries(state, entries) {
-  return state.set('entries', List(entries));
+  const list = List(entries);
+  return state.set('entries', list)
+              .set('initialEntries', list)
 }
 
 function getWinners(vote) {
@@ -53,4 +55,10 @@ export function vote(voteState, entry, clientId) {
     ).setIn(['votes', clientId], entry);
   }
   return newState;
+}
+
+export function restart(state){
+  return next(state.set('entries', state.get('initialEntries'))
+              .remove('vote')
+              .remove('winner'))
 }

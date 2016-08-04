@@ -17,6 +17,7 @@ export const Voting = React.createClass({
           <Winner ref="winner" winner={this.props.winner} /> :
           <Vote {...this.props} />
         }
+        <div>{this.props.connectionStatus}</div>
       </div>
     );
   }
@@ -26,7 +27,8 @@ function mapStateToProps(state) {
   return {
     pair: state.getIn(['vote', 'pair']),
     hasVoted: state.get('hasVoted'),
-    winner: state.get('winner')
+    winner: state.get('winner'),
+    connectionStatus: state.get('connectionStatus')
   };
 }
 

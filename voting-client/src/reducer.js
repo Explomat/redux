@@ -30,7 +30,9 @@ export default function(state = Map(), action) {
 		case 'VOTE':
     		return vote(state, action.entry);
     	case 'SET_CLIENT_ID':
-    		return state.set('clientId', action.clientId)
+    		return state.set('clientId', action.clientId);
+    	case 'CONNECTION_STATUS':
+    		return state.set('connectionStatus', action.status);
 	}
 	return state;
 }

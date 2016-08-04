@@ -26,3 +26,17 @@ export function setClientId (clientId) {
     clientId
   };
 }
+
+export function restart(){
+  return {
+    meta: {remote: true},
+    type: 'RESTART'
+  }
+}
+
+export function setConnectionStatus(status){
+  return {
+    type: 'CONNECTION_STATUS',
+    status
+  }
+}
